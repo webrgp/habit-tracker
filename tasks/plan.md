@@ -342,7 +342,7 @@ independent of each other.
   - Files: `app.js`, `style.css`.
   - Scope: XS.
 
-- [ ] **Task 12: Midnight rollover**
+- [x] **Task 12: Midnight rollover**
 
   Recompute today and re-render on `visibilitychange`, so an app left open
   overnight does not keep pointing the strip at yesterday.

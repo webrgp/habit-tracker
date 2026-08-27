@@ -213,5 +213,11 @@ form.addEventListener('submit', (event) => {
   nameInput.focus();
 });
 
+// An app left open overnight would keep pointing the strip at yesterday.
+// render() reads the clock itself, so re-running it is the whole rollover.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') render();
+});
+
 reflectStorage();
 render();
