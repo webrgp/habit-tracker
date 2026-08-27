@@ -89,6 +89,11 @@ independent of each other.
   `.agents/`, and `skills-lock.json`, which are local agent tooling and do not
   belong in a public repo.
 
+  **Status: partial.** The local repo and `.gitignore` landed alongside T4, so
+  the streak work had somewhere to commit. The GitHub remote, the placeholder
+  `index.html`, `.nojekyll`, and enabling Pages are still open, and creating the
+  public repo needs Rodrigo's go.
+
   - Acceptance: the Pages URL loads the placeholder over HTTPS from a phone on
     cellular, not just from the laptop.
   - Acceptance: `git status` is clean, and `.claude/`, `.agents/`, and
