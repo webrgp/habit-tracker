@@ -328,7 +328,7 @@ independent of each other.
 
 ### Phase 6: Edges and release
 
-- [ ] **Task 11: Empty and storage-unavailable states**
+- [x] **Task 11: Empty and storage-unavailable states**
 
   Render a prompt instead of the list when no habits exist. When storage is
   unusable, show a banner explaining that nothing will be saved and disable the

@@ -11,7 +11,7 @@ import { load, save, storageAvailable } from './store.js';
 const WINDOW = 7;
 
 const state = load();
-const canStore = storageAvailable();
+let storageOk = storageAvailable();
 
 const todayLabel = document.getElementById('today-label');
 const form = document.getElementById('add-habit');
@@ -20,6 +20,25 @@ const cadenceInput = document.getElementById('habit-cadence');
 const targetField = document.getElementById('target-field');
 const targetInput = document.getElementById('habit-target');
 const list = document.getElementById('habits');
+const emptyState = document.getElementById('empty-state');
+const warning = document.getElementById('storage-warning');
+
+// A write can start failing mid-session when the quota runs out, so the banner
+// is driven by every save rather than only by the check at startup.
+function persist() {
+  if (save(state)) return;
+  storageOk = false;
+  reflectStorage();
+}
+
+function reflectStorage() {
+  warning.hidden = storageOk;
+  warning.textContent = storageOk ? '' : 'Nothing is being saved. This browser '
+    + 'is blocking local storage, so anything you add will be gone when you '
+    + 'close the app.';
+  form.querySelectorAll('input, select, button')
+    .forEach((el) => { el.disabled = !storageOk; });
+}
 
 function doneDays(habitId) {
   return new Set(Object.keys(state.entries[habitId] ?? {}));
@@ -132,6 +151,7 @@ function render() {
   });
 
   const today = dateKey(now);
+  emptyState.hidden = state.habits.length > 0;
   list.replaceChildren(...state.habits.map((habit) => card(habit, today)));
 }
 
@@ -139,7 +159,7 @@ function toggle(habitId, date) {
   const days = state.entries[habitId] ??= {};
   if (days[date]) delete days[date];
   else days[date] = true;
-  save(state);
+  persist();
   render();
 }
 
@@ -161,7 +181,7 @@ list.addEventListener('click', (event) => {
   state.habits = state.habits.filter((h) => h.id !== id);
   // Drop the history too, or entries accumulates keys nothing points at.
   delete state.entries[id];
-  save(state);
+  persist();
   render();
 });
 
@@ -185,7 +205,7 @@ form.addEventListener('submit', (event) => {
     target: weekly ? Number(targetInput.value) : 1,
     createdAt: dateKey(new Date()),
   });
-  save(state);
+  persist();
 
   form.reset();
   targetField.hidden = true;
@@ -193,8 +213,5 @@ form.addEventListener('submit', (event) => {
   nameInput.focus();
 });
 
-if (!canStore) {
-  form.querySelectorAll('input, select, button').forEach((el) => { el.disabled = true; });
-}
-
+reflectStorage();
 render();

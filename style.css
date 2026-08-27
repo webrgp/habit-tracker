@@ -146,3 +146,12 @@ button[type="submit"] {
   color: var(--accent);
   font-weight: 600;
 }
+
+#empty-state {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 0.75rem;
+  text-align: center;
+  color: var(--muted);
+}

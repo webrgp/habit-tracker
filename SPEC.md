@@ -41,7 +41,7 @@ streak numbers it shows match what actually happened.
 ## Commands
 
 ```
-Dev:    python3 -m http.server 8000     # then open http://localhost:8000
+Dev:    python3 scripts/serve.py        # http://localhost:8000, no-store headers
 Test:   TZ=America/New_York node --test   # fixed zone; UTC hides date bugs
 Build:  none (static files, no build step)
 Lint:   none configured
@@ -56,15 +56,19 @@ prompts work in development without TLS.
 ```
 index.html              → The single screen, markup only
 app.js                  → Render and event wiring
-store.js                → localStorage read/write, habit CRUD, entry toggle
+store.js                → localStorage read/write behind one key
 streak.js               → Pure date and streak functions (the tested core)
 style.css               → Styles
 sw.js                   → Service worker, caches the app shell
 manifest.webmanifest    → Install metadata
-icons/                  → icon-192.png, icon-512.png
+icons/                  → icon-180.png, icon-192.png, icon-512.png
 .nojekyll               → Empty; tells GitHub Pages to skip Jekyll
+scripts/serve.py        → Dev server that sends no-store
+scripts/make-icons.mjs  → Regenerates the placeholder icons
 test/streak.test.js     → node:test suite for streak.js
+test/store.test.js      → node:test suite for store.js
 SPEC.md                 → This file
+tasks/plan.md           → Task breakdown
 docs/intent/            → Confirmed intent
 ```
 
