@@ -80,7 +80,7 @@ independent of each other.
 
 ### Phase 1: Foundation and install (fail fast)
 
-- [ ] **Task 1: Git repo on GitHub Pages serving a placeholder**
+- [x] **Task 1: Git repo on GitHub Pages serving a placeholder**
 
   Turn this directory into a git repository, push it to a new public GitHub
   repo, and enable Pages on `main` at the repo root. `index.html` is a
@@ -89,10 +89,19 @@ independent of each other.
   `.agents/`, and `skills-lock.json`, which are local agent tooling and do not
   belong in a public repo.
 
-  **Status: partial.** The local repo and `.gitignore` landed alongside T4, so
-  the streak work had somewhere to commit. The GitHub remote, the placeholder
-  `index.html`, `.nojekyll`, and enabling Pages are still open, and creating the
-  public repo needs Rodrigo's go.
+  **Status: done, one acceptance criterion left to Rodrigo.** The public repo is
+  `webrgp/habit-tracker`, `main` is pushed, `.nojekyll` is in place, and
+  `.gitignore` keeps `.claude/`, `.agents/`, and `skills-lock.json` untracked.
+  Pages is enabled on `main` at the repo root and serves
+  https://webrgp.github.io/habit-tracker/ with HTTPS enforced.
+
+  The placeholder `index.html` never shipped as a separate step. The real app
+  reached `main` first, so the fail-fast intent of this task is gone: an install
+  or hosting problem now surfaces with the whole app already written. Recorded
+  rather than pretended away.
+
+  The remaining criterion is the phone load over cellular, which needs Rodrigo's
+  device.
 
   - Acceptance: the Pages URL loads the placeholder over HTTPS from a phone on
     cellular, not just from the laptop.
@@ -361,7 +370,12 @@ independent of each other.
   Bump `CACHE`, deploy, and walk the spec's Success Criteria end to end on the
   installed phone app. Fix whatever fails, or record it as accepted.
 
-  **Status: partial, blocked on the deploy.** Seven of the eight Success
+  **Status: partial, and no longer blocked.** The deploy landed: Pages serves
+  https://webrgp.github.io/habit-tracker/ from `main` at the repo root with HTTPS
+  enforced, every shell file answers 200, and the service worker activates with
+  its scope on the project subpath. What is left is the phone walk-through.
+
+  Seven of the eight Success
   Criteria pass on the desktop, verified with the dev server stopped and the
   service worker serving from cache: the suite is green, add/delete/toggle and
   backfill survive a restart, the daily habit reads "3 days" then "4 days", the
@@ -374,9 +388,9 @@ independent of each other.
   `CACHE` stays at `habit-tracker-v1`, because nothing has shipped yet and the
   first deploy is what ships v1. Bumping starts with the second deploy.
 
-  **What is left, and it needs Rodrigo:** create the public GitHub repo, push
-  `main`, enable Pages on the repo root, then install to the phone home screen,
-  force-quit, enable airplane mode, and relaunch.
+  **What is left, and it needs Rodrigo:** install to the phone home screen from
+  https://webrgp.github.io/habit-tracker/, force-quit, enable airplane mode, and
+  relaunch.
 
   - Acceptance: all eight Success Criteria in `SPEC.md` pass on the phone.
   - Acceptance: devtools shows no network request after the shell is cached.
