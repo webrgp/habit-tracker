@@ -103,7 +103,7 @@ independent of each other.
   - Files: `index.html`, `.nojekyll`, `.gitignore`.
   - Scope: XS.
 
-- [ ] **Task 2: Installable PWA shell**
+- [x] **Task 2: Installable PWA shell**
 
   Add `manifest.webmanifest` (name, short name, `display: standalone`, theme and
   background colors, both icon sizes), plus an `apple-touch-icon` link in
@@ -119,6 +119,14 @@ independent of each other.
     the page rather than an error.
   - Acceptance: bumping `CACHE` and redeploying serves the new page on next
     launch.
+
+  **Note.** The worker precaches an explicit shell list rather than relying on
+  runtime fill alone. Runtime fill misses the page's own CSS and modules on a
+  first visit, because the worker only claims the page after those have already
+  been fetched, so a cold offline launch rendered nothing. Runtime fill still
+  catches everything outside the list. Verified on the desktop by stopping the
+  server and reloading; the phone install still needs the deploy.
+
   - Verify: install on the phone, enable airplane mode, force-quit, relaunch.
   - Dependencies: T1.
   - Files: `manifest.webmanifest`, `sw.js`, `index.html`, `icons/`.

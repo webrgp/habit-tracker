@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Habit Tracker</title>
+<meta name="theme-color" content="#111827">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- The Apple-prefixed twins are the legacy spelling, still needed by older iOS. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Habits">
+<link rel="manifest" href="manifest.webmanifest">
+<!-- Safari ignores manifest icons for Add to Home Screen and falls back to a
+     screenshot of the page, so it needs its own link. -->
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+  <h1>Habit Tracker</h1>
+</main>
+<script>
+  // Registered inline so the shell caches itself even before app.js exists.
+  if ('serviceWorker' in navigator) {
+    addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+:root {
+  --bg: #111827;
+  --card: #1b2434;
+  --line: #2c3648;
+  --text: #e8edf5;
+  --muted: #94a2b8;
+  --accent: #34d399;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 1.25rem 1rem calc(2rem + env(safe-area-inset-bottom));
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, sans-serif;
+}
+
+main { max-width: 34rem; margin: 0 auto; }
+
+h1 { font-size: 1.35rem; margin: 0 0 1rem; }
