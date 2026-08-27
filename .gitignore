@@ -1,0 +1,6 @@
+.DS_Store
+
+# Agent tooling — this repo goes public for GitHub Pages.
+.agents/
+.claude/
+skills-lock.json
