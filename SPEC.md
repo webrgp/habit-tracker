@@ -349,21 +349,30 @@ costs the streak.
 
 ## Deployment
 
-GitHub Pages, serving the repo root off `main`. This directory is not a git
-repository yet, so the first implementation task is `git init`, a first commit,
-a push to a new GitHub remote, and enabling Pages in the repo settings. Pages
-gives HTTPS on a `github.io` subdomain, which is what the phone needs before it
-will offer to install anything.
+GitHub Pages, serving the repo root off `main`. The local repository exists and
+holds the full history; what remains is a push to a new public GitHub remote and
+enabling Pages in the repo settings. Pages gives HTTPS on a `github.io`
+subdomain, which is what the phone needs before it will offer to install
+anything.
+
+Every path in the app is relative and the manifest's `start_url` and `scope` are
+`./`, because Pages serves a project site under a subpath rather than at a
+domain root.
+
+The service worker is cache-first, so an installed app keeps serving the old
+files until `CACHE` in `sw.js` changes. Bumping that constant is part of every
+deploy after the first, and any new file has to join the `SHELL` list in the
+same edit.
 
 A public repo keeps Pages free, and it publishes the source, not the data. The
 habit history lives in localStorage on the phone and is never uploaded, so the
 privacy constraint holds regardless of who can read the code.
 
-Icons are a generated placeholder: a single glyph on a solid background,
-rendered to `icons/icon-192.png` and `icons/icon-512.png` by a throwaway script,
-committed, and swapped for a real design later if it ever matters. Nothing in
-the app references the icons except `manifest.webmanifest`, so replacing them
-is a file swap.
+Icons are a generated placeholder: a check mark on a solid background, rendered
+to `icons/icon-180.png`, `icons/icon-192.png`, and `icons/icon-512.png` by
+`scripts/make-icons.mjs`, committed, and swapped for a real design later if it
+ever matters. The 180 is the `apple-touch-icon`, since Safari ignores manifest
+icons for Add to Home Screen.
 
 An empty `.nojekyll` at the repo root turns off Jekyll, so Pages publishes the
 files as they are.

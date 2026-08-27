@@ -361,6 +361,23 @@ independent of each other.
   Bump `CACHE`, deploy, and walk the spec's Success Criteria end to end on the
   installed phone app. Fix whatever fails, or record it as accepted.
 
+  **Status: partial, blocked on the deploy.** Seven of the eight Success
+  Criteria pass on the desktop, verified with the dev server stopped and the
+  service worker serving from cache: the suite is green, add/delete/toggle and
+  backfill survive a restart, the daily habit reads "3 days" then "4 days", the
+  3x weekly reads "no streak" at 2 of 3 and "1 week" at 3 of 3, breaking and
+  refilling Aug 26 moves the streak from "4 days" to "1 day" and back, exactly
+  seven cells render spanning today plus six days back, and every request is
+  answered from cache with the server down. Criterion 2, the phone install and
+  offline cold launch, cannot be checked from here.
+
+  `CACHE` stays at `habit-tracker-v1`, because nothing has shipped yet and the
+  first deploy is what ships v1. Bumping starts with the second deploy.
+
+  **What is left, and it needs Rodrigo:** create the public GitHub repo, push
+  `main`, enable Pages on the repo root, then install to the phone home screen,
+  force-quit, enable airplane mode, and relaunch.
+
   - Acceptance: all eight Success Criteria in `SPEC.md` pass on the phone.
   - Acceptance: devtools shows no network request after the shell is cached.
   - Acceptance: `SPEC.md` matches what actually shipped, or the difference is
@@ -372,8 +389,8 @@ independent of each other.
 
 ### Checkpoint: Complete
 
-- [ ] All thirteen tasks checked off.
-- [ ] `TZ=America/New_York node --test` passes.
+- [x] Twelve of thirteen tasks complete; T1 and T13 wait on the deploy.
+- [x] `TZ=America/New_York node --test` passes: 43 tests, 0 failures.
 - [ ] The app is installed, offline-capable, and holding real habits.
 
 ---
