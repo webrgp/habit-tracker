@@ -29,3 +29,31 @@ export function dailyStreak(doneSet, today, createdAt) {
   }
   return n;
 }
+
+// Weeks start Monday. getDay() is Sunday-first, so (day + 6) % 7 rotates it to
+// a Monday-first index that doubles as the offset back to that Monday.
+export function weekStart(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return addDays(key, -((new Date(y, m - 1, d).getDay() + 6) % 7));
+}
+
+export function countInWeek(doneSet, weekStartKey) {
+  let n = 0;
+  for (let i = 0; i < 7; i++) if (doneSet.has(addDays(weekStartKey, i))) n += 1;
+  return n;
+}
+
+// Consecutive weeks that hit their target. The current week is still in
+// progress: it counts once it reaches the target, and before that it is skipped
+// rather than treated as a miss.
+export function weeklyStreak(doneSet, today, createdAt, target) {
+  let week = weekStart(today);
+  if (countInWeek(doneSet, week) < target) week = addDays(week, -7);
+  const firstWeek = weekStart(createdAt);
+  let n = 0;
+  while (week >= firstWeek && countInWeek(doneSet, week) >= target) {
+    n += 1;
+    week = addDays(week, -7);
+  }
+  return n;
+}

@@ -135,7 +135,7 @@ independent of each other.
 
 ### Phase 2: The tested core
 
-- [ ] **Task 3: Date helpers**
+- [x] **Task 3: Date helpers**
 
   Write `streak.js` with `dateKey(date)`, `addDays(key, n)`, `weekStart(key)`
   returning the Monday, and `countInWeek(doneSet, weekStartKey)` counting
@@ -143,9 +143,9 @@ independent of each other.
   Dates travel as `YYYY-MM-DD` keys; only `dateKey` reads a `Date`. Update the
   Test command in `SPEC.md` to include the `TZ` prefix.
 
-  **Status: partial.** `dateKey` and `addDays` shipped with T4, along with the
-  `SPEC.md` command update. `weekStart` and `countInWeek` have no caller until
-  the weekly streak, so they moved to T5.
+  **Status: done.** `dateKey` and `addDays` shipped with T4, along with the
+  `SPEC.md` command update. `weekStart` and `countInWeek` shipped with T5, where
+  they got their first caller.
 
   - Acceptance: `dateKey` returns the local calendar date, including at 8pm in a
     negative-offset zone where `toISOString()` would return tomorrow.
@@ -175,7 +175,7 @@ independent of each other.
   - Files: `streak.js`, `test/streak.test.js`.
   - Scope: S.
 
-- [ ] **Task 5: Weekly streak**
+- [x] **Task 5: Weekly streak**
 
   Add `weekStart(key)` and `countInWeek(doneSet, weekStartKey)` (moved from T3),
   then `weeklyStreak(doneSet, today, createdAt, target)`. The current week is in
