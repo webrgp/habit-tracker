@@ -85,3 +85,15 @@ button[type="submit"] {
 
 .habit h2 { font-size: 1rem; margin: 0; }
 .habit .cadence { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.85rem; }
+
+.habit { position: relative; }
+
+.delete {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: transparent;
+}

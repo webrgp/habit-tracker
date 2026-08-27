@@ -255,7 +255,7 @@ independent of each other.
   - Files: `index.html`, `app.js`, `store.js`, `style.css`.
   - Scope: M.
 
-- [ ] **Task 8: Delete a habit**
+- [x] **Task 8: Delete a habit**
 
   Add a delete button per card, guarded by a native `confirm()`. Deleting
   removes both the record in `habits` and its key in `entries`, then saves and
