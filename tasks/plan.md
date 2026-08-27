@@ -279,7 +279,7 @@ independent of each other.
 
 ### Phase 4: Logging
 
-- [ ] **Task 9: Seven-day strip and toggle**
+- [x] **Task 9: Seven-day strip and toggle**
 
   Render seven cells per card, oldest left and today rightmost, each labeled
   with a weekday initial and day number, filled when done. Tapping a cell

@@ -6,6 +6,7 @@ import {
   addDays,
   weekStart,
   countInWeek,
+  lastNDays,
   dailyStreak,
   weeklyStreak,
 } from '../streak.js';
@@ -169,4 +170,18 @@ test('the weekly walk never counts weeks before the habit existed', () => {
 test('a once-a-week habit counts a week with a single done day', () => {
   const done = new Set(['2026-08-25']);
   assert.equal(weeklyStreak(done, '2026-08-27', '2026-08-01', 1), 1);
+});
+
+test('lastNDays ends at today and runs oldest first', () => {
+  assert.deepEqual(lastNDays('2026-08-27', 7), [
+    '2026-08-21', '2026-08-22', '2026-08-23', '2026-08-24',
+    '2026-08-25', '2026-08-26', '2026-08-27',
+  ]);
+});
+
+test('lastNDays reaches back across a month boundary', () => {
+  assert.deepEqual(lastNDays('2026-09-02', 7), [
+    '2026-08-27', '2026-08-28', '2026-08-29', '2026-08-30',
+    '2026-08-31', '2026-09-01', '2026-09-02',
+  ]);
 });

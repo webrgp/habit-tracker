@@ -97,3 +97,29 @@ button[type="submit"] {
   color: var(--muted);
   background: transparent;
 }
+
+.strip { display: flex; gap: 0.3rem; margin-top: 0.75rem; }
+
+.day {
+  flex: 1;
+  display: grid;
+  gap: 0.1rem;
+  justify-items: center;
+  padding: 0.4rem 0.15rem;
+  min-height: 2.9rem;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.day .initial { font-size: 0.65rem; color: var(--muted); }
+.day .number { font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+
+.day.today { border-color: var(--muted); }
+
+.day.done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #07281c;
+}
+
+.day.done .initial { color: #0d4433; }

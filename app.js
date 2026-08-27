@@ -1,4 +1,4 @@
-import { dateKey } from './streak.js';
+import { dateKey, lastNDays } from './streak.js';
 import { load, save, storageAvailable } from './store.js';
 
 const state = load();
@@ -16,7 +16,48 @@ function cadenceLabel(habit) {
   return habit.cadence === 'daily' ? 'Every day' : `${habit.target}× per week`;
 }
 
-function card(habit) {
+const WINDOW = 7;
+
+function done(habitId, date) {
+  return Boolean(state.entries[habitId]?.[date]);
+}
+
+function strip(habit, today) {
+  const wrap = document.createElement('div');
+  wrap.className = 'strip';
+
+  for (const date of lastNDays(today, WINDOW)) {
+    const [y, m, d] = date.split('-').map(Number);
+    const when = new Date(y, m - 1, d);
+    const isDone = done(habit.id, date);
+
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = 'day';
+    cell.dataset.date = date;
+    cell.setAttribute('aria-pressed', String(isDone));
+    cell.setAttribute('aria-label', when.toLocaleDateString(undefined, {
+      weekday: 'long', month: 'long', day: 'numeric',
+    }));
+    if (isDone) cell.classList.add('done');
+    if (date === today) cell.classList.add('today');
+
+    const initial = document.createElement('span');
+    initial.className = 'initial';
+    initial.textContent = when.toLocaleDateString(undefined, { weekday: 'narrow' });
+
+    const number = document.createElement('span');
+    number.className = 'number';
+    number.textContent = String(d);
+
+    cell.append(initial, number);
+    wrap.append(cell);
+  }
+
+  return wrap;
+}
+
+function card(habit, today) {
   const li = document.createElement('li');
   li.className = 'habit';
   li.dataset.habit = habit.id;
@@ -36,7 +77,7 @@ function card(habit) {
   remove.textContent = 'Delete';
   remove.setAttribute('aria-label', `Delete ${habit.name}`);
 
-  li.append(name, cadence, remove);
+  li.append(name, cadence, remove, strip(habit, today));
   return li;
 }
 
@@ -47,11 +88,26 @@ function render() {
   todayLabel.textContent = now.toLocaleDateString(undefined, {
     weekday: 'long', month: 'short', day: 'numeric',
   });
-  list.replaceChildren(...state.habits.map(card));
+  const today = dateKey(now);
+  list.replaceChildren(...state.habits.map((habit) => card(habit, today)));
+}
+
+function toggle(habitId, date) {
+  const days = state.entries[habitId] ??= {};
+  if (days[date]) delete days[date];
+  else days[date] = true;
+  save(state);
+  render();
 }
 
 // Delegated, so a re-render never has to reattach anything.
 list.addEventListener('click', (event) => {
+  const cell = event.target.closest('button[data-date]');
+  if (cell) {
+    toggle(cell.closest('.habit').dataset.habit, cell.dataset.date);
+    return;
+  }
+
   const button = event.target.closest('button[data-delete]');
   if (!button) return;
 

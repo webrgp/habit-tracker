@@ -17,6 +17,11 @@ export function addDays(key, n) {
   return dateKey(new Date(y, m - 1, d + n));
 }
 
+// The backfill window: n keys ending at today, oldest first.
+export function lastNDays(today, n) {
+  return Array.from({ length: n }, (_, i) => addDays(today, i - (n - 1)));
+}
+
 // Consecutive days ending at the most recent day that could count. Today is
 // still in progress, so an unlogged today starts the walk at yesterday instead
 // of reading zero.
