@@ -212,7 +212,7 @@ independent of each other.
 
 ### Phase 3: Persistence and habits
 
-- [ ] **Task 6: Storage layer**
+- [x] **Task 6: Storage layer**
 
   Write `store.js` owning the `habit-tracker:v1` key: `load()` returning the
   parsed state or a fresh empty one, and `save(state)` writing the whole blob.
