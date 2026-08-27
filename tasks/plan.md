@@ -299,7 +299,7 @@ independent of each other.
 
 ### Phase 5: Stats
 
-- [ ] **Task 10: Streak badge and weekly progress**
+- [x] **Task 10: Streak badge and weekly progress**
 
   Wire `dailyStreak` and `weeklyStreak` into the card. The badge names its unit,
   since a daily 5 and a weekly 5 are different claims: "5 days", "5 weeks", or

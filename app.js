@@ -1,5 +1,14 @@
-import { dateKey, lastNDays } from './streak.js';
+import {
+  dateKey,
+  lastNDays,
+  weekStart,
+  countInWeek,
+  dailyStreak,
+  weeklyStreak,
+} from './streak.js';
 import { load, save, storageAvailable } from './store.js';
+
+const WINDOW = 7;
 
 const state = load();
 const canStore = storageAvailable();
@@ -12,24 +21,59 @@ const targetField = document.getElementById('target-field');
 const targetInput = document.getElementById('habit-target');
 const list = document.getElementById('habits');
 
+function doneDays(habitId) {
+  return new Set(Object.keys(state.entries[habitId] ?? {}));
+}
+
 function cadenceLabel(habit) {
   return habit.cadence === 'daily' ? 'Every day' : `${habit.target}× per week`;
 }
 
-const WINDOW = 7;
+// The unit is part of the claim: a daily 5 and a weekly 5 are different things.
+function streakLabel(habit, done, today) {
+  const daily = habit.cadence === 'daily';
+  const n = daily
+    ? dailyStreak(done, today, habit.createdAt)
+    : weeklyStreak(done, today, habit.createdAt, habit.target);
 
-function done(habitId, date) {
-  return Boolean(state.entries[habitId]?.[date]);
+  if (n === 0) return { text: 'no streak', live: false };
+  const unit = daily ? 'day' : 'week';
+  return { text: `${n} ${unit}${n === 1 ? '' : 's'}`, live: true };
 }
 
-function strip(habit, today) {
+function meta(habit, done, today) {
+  const row = document.createElement('p');
+  row.className = 'meta';
+
+  const cadence = document.createElement('span');
+  cadence.textContent = cadenceLabel(habit);
+
+  const streak = streakLabel(habit, done, today);
+  const badge = document.createElement('span');
+  badge.className = streak.live ? 'badge on' : 'badge';
+  badge.textContent = streak.text;
+
+  row.append(cadence, badge);
+
+  if (habit.cadence === 'weekly') {
+    const progress = document.createElement('span');
+    progress.className = 'progress';
+    progress.textContent =
+      `${countInWeek(done, weekStart(today))} of ${habit.target} this week`;
+    row.append(progress);
+  }
+
+  return row;
+}
+
+function strip(habit, done, today) {
   const wrap = document.createElement('div');
   wrap.className = 'strip';
 
   for (const date of lastNDays(today, WINDOW)) {
     const [y, m, d] = date.split('-').map(Number);
     const when = new Date(y, m - 1, d);
-    const isDone = done(habit.id, date);
+    const isDone = done.has(date);
 
     const cell = document.createElement('button');
     cell.type = 'button';
@@ -58,6 +102,8 @@ function strip(habit, today) {
 }
 
 function card(habit, today) {
+  const done = doneDays(habit.id);
+
   const li = document.createElement('li');
   li.className = 'habit';
   li.dataset.habit = habit.id;
@@ -66,10 +112,6 @@ function card(habit, today) {
   // textContent, never innerHTML: the name is user input.
   name.textContent = habit.name;
 
-  const cadence = document.createElement('p');
-  cadence.className = 'cadence';
-  cadence.textContent = cadenceLabel(habit);
-
   const remove = document.createElement('button');
   remove.type = 'button';
   remove.className = 'delete';
@@ -77,7 +119,7 @@ function card(habit, today) {
   remove.textContent = 'Delete';
   remove.setAttribute('aria-label', `Delete ${habit.name}`);
 
-  li.append(name, cadence, remove, strip(habit, today));
+  li.append(name, meta(habit, done, today), remove, strip(habit, done, today));
   return li;
 }
 
@@ -88,6 +130,7 @@ function render() {
   todayLabel.textContent = now.toLocaleDateString(undefined, {
     weekday: 'long', month: 'short', day: 'numeric',
   });
+
   const today = dateKey(now);
   list.replaceChildren(...state.habits.map((habit) => card(habit, today)));
 }
@@ -150,6 +193,8 @@ form.addEventListener('submit', (event) => {
   nameInput.focus();
 });
 
-if (!canStore) form.querySelectorAll('input, select, button').forEach((el) => { el.disabled = true; });
+if (!canStore) {
+  form.querySelectorAll('input, select, button').forEach((el) => { el.disabled = true; });
+}
 
 render();

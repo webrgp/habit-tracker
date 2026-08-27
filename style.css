@@ -123,3 +123,26 @@ button[type="submit"] {
 }
 
 .day.done .initial { color: #0d4433; }
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.badge {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.badge.on {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
