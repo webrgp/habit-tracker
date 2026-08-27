@@ -88,6 +88,10 @@ function meta(habit, done, today) {
 function strip(habit, done, today) {
   const wrap = document.createElement('div');
   wrap.className = 'strip';
+  // Without this a screen reader reads "Monday, August 24" with no clue which
+  // habit it belongs to.
+  wrap.setAttribute('role', 'group');
+  wrap.setAttribute('aria-label', `Log days for ${habit.name}`);
 
   for (const date of lastNDays(today, WINDOW)) {
     const [y, m, d] = date.split('-').map(Number);
@@ -142,9 +146,19 @@ function card(habit, today) {
   return li;
 }
 
+// A toggle re-renders, which destroys the very button that was pressed. A mouse
+// user never notices; a keyboard user is dumped back to the top of the document,
+// so the equivalent cell in the fresh strip takes focus back.
+function focusedCell() {
+  const cell = document.activeElement?.closest?.('.day');
+  if (!cell) return null;
+  return { habit: cell.closest('.habit').dataset.habit, date: cell.dataset.date };
+}
+
 // Today is recomputed here rather than held in a constant, so re-rendering is
 // all it takes to roll over at midnight.
 function render() {
+  const keepFocus = focusedCell();
   const now = new Date();
   todayLabel.textContent = now.toLocaleDateString(undefined, {
     weekday: 'long', month: 'short', day: 'numeric',
@@ -153,6 +167,13 @@ function render() {
   const today = dateKey(now);
   emptyState.hidden = state.habits.length > 0;
   list.replaceChildren(...state.habits.map((habit) => card(habit, today)));
+
+  if (keepFocus) {
+    list.querySelector(
+      `[data-habit="${CSS.escape(keepFocus.habit)}"] `
+      + `[data-date="${CSS.escape(keepFocus.date)}"]`,
+    )?.focus();
+  }
 }
 
 function toggle(habitId, date) {
@@ -183,6 +204,7 @@ list.addEventListener('click', (event) => {
   delete state.entries[id];
   persist();
   render();
+  nameInput.focus();
 });
 
 cadenceInput.addEventListener('change', () => {
