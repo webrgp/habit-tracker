@@ -137,6 +137,14 @@ describes what happened, not what was logged on time.
 `version` exists so a future migration can recognize old data. There is no
 migration code today.
 
+**`load()` validates every record and drops the ones that fail.** A blob written
+by an older build of v1 can be missing a field, and a hand-edited one can hold
+anything, so `load()` checks each habit's `id`, `name`, `cadence`, `target`, and
+`createdAt` before returning it, and rebuilds `entries` as date keys mapping to
+`true`. A single bad record costs that habit rather than the whole history,
+because localStorage holds the only copy. An unreadable top-level shape still
+falls back to an empty state.
+
 ## Streak Rules
 
 All streak functions are pure and take `today` as a parameter rather than

@@ -42,6 +42,65 @@ test('valid JSON of the wrong shape loads as an empty state', () => {
   }
 });
 
+test('a habit record missing or corrupting a field is dropped, the rest survive', () => {
+  const good = { id: 'a91b', name: 'Read', cadence: 'daily', target: 1, createdAt: '2026-08-20' };
+  const bad = [
+    5,
+    null,
+    { ...good, id: '' },
+    { ...good, name: 42 },
+    { ...good, cadence: 'monthly' },
+    { ...good, target: 0 },
+    { ...good, target: 2.5 },
+    { ...good, createdAt: '8/20/2026' },
+    { id: 'x', name: 'No cadence' },
+  ];
+  const stored = JSON.stringify({ version: 1, habits: [...bad, good], entries: {} });
+  withStorage(fakeStorage({ [KEY]: stored }), () => {
+    assert.deepEqual(load(), { version: 1, habits: [good], entries: { a91b: {} } });
+  });
+});
+
+test('a habit id that collides with an inherited property name is dropped', () => {
+  // `state.entries.__proto__` reads Object.prototype rather than a day map, so
+  // the next toggle would write its date key onto every object on the page.
+  for (const id of ['__proto__', 'constructor', 'toString']) {
+    const stored = JSON.stringify({
+      version: 1,
+      habits: [{ id, name: 'Polluter', cadence: 'daily', target: 1, createdAt: '2026-08-20' }],
+      entries: {},
+    });
+    withStorage(fakeStorage({ [KEY]: stored }), () => assert.deepEqual(load(), EMPTY));
+  }
+  assert.equal({}['2026-08-27'], undefined);
+});
+
+test('entries are rebuilt, so a bad day map cannot throw on the next tap', () => {
+  const good = { id: 'a91b', name: 'Read', cadence: 'daily', target: 1, createdAt: '2026-08-20' };
+  const stored = JSON.stringify({
+    version: 1,
+    habits: [good],
+    // A string here would throw on `days[date] = true`; the junk keys and the
+    // orphan habit are what an older build or a hand edit leaves behind.
+    entries: { a91b: { '2026-08-26': true, '2026-08-27': false, nonsense: true }, ghost: 'oops' },
+  });
+  withStorage(fakeStorage({ [KEY]: stored }), () => {
+    assert.deepEqual(load(), {
+      version: 1,
+      habits: [good],
+      entries: { a91b: { '2026-08-26': true } },
+    });
+  });
+});
+
+test('a habit whose entries value is not an object still loads with an empty map', () => {
+  const good = { id: 'a91b', name: 'Read', cadence: 'daily', target: 1, createdAt: '2026-08-20' };
+  const stored = JSON.stringify({ version: 1, habits: [good], entries: { a91b: ['2026-08-26'] } });
+  withStorage(fakeStorage({ [KEY]: stored }), () => {
+    assert.deepEqual(load(), { version: 1, habits: [good], entries: { a91b: {} } });
+  });
+});
+
 test('a read that throws loads as an empty state', () => {
   const hostile = { getItem: () => { throw new Error('private browsing'); } };
   withStorage(hostile, () => assert.deepEqual(load(), EMPTY));
