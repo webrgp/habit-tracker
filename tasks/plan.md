@@ -235,7 +235,7 @@ independent of each other.
   - Files: `store.js`, `test/store.test.js`.
   - Scope: S.
 
-- [ ] **Task 7: Add a habit**
+- [x] **Task 7: Add a habit**
 
   Build the real `index.html` structure, `app.js` with a render function, and
   the add form: name, cadence (daily or weekly), and a target from 1 to 6 shown

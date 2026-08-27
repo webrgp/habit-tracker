@@ -19,8 +19,35 @@
 </head>
 <body>
 <main id="app">
-  <h1>Habit Tracker</h1>
+  <header>
+    <h1>Habit Tracker</h1>
+    <p id="today-label"></p>
+  </header>
+
+  <p id="storage-warning" hidden></p>
+
+  <form id="add-habit" autocomplete="off">
+    <label for="habit-name">New habit</label>
+    <input id="habit-name" type="text" placeholder="Read for 20 minutes" maxlength="60">
+    <div class="fields">
+      <span class="field">
+        <label for="habit-cadence">How often</label>
+        <select id="habit-cadence">
+          <option value="daily">Every day</option>
+          <option value="weekly">Times per week</option>
+        </select>
+      </span>
+      <span class="field" id="target-field" hidden>
+        <label for="habit-target">Times</label>
+        <input id="habit-target" type="number" min="1" max="6" value="3">
+      </span>
+    </div>
+    <button type="submit">Add habit</button>
+  </form>
+
+  <ul id="habits"></ul>
 </main>
+<script type="module" src="app.js"></script>
 <script>
   // Registered inline so the shell caches itself even before app.js exists.
   if ('serviceWorker' in navigator) {

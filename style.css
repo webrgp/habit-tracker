@@ -10,6 +10,9 @@
 
 * { box-sizing: border-box; }
 
+/* A display rule on a class outranks the UA sheet's [hidden], so say it here. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   padding: 1.25rem 1rem calc(2rem + env(safe-area-inset-bottom));
@@ -21,3 +24,64 @@ body {
 main { max-width: 34rem; margin: 0 auto; }
 
 h1 { font-size: 1.35rem; margin: 0 0 1rem; }
+
+header { margin-bottom: 1.25rem; }
+h1 { font-size: 1.35rem; margin: 0; }
+#today-label { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.95rem; }
+
+#storage-warning {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #7f4a2e;
+  border-radius: 0.6rem;
+  background: #2a1c14;
+  color: #f6c89a;
+  font-size: 0.9rem;
+}
+
+#add-habit {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--card);
+}
+
+#add-habit label { font-size: 0.8rem; color: var(--muted); }
+#add-habit .fields { display: flex; gap: 0.75rem; }
+#add-habit .field { display: grid; gap: 0.3rem; }
+#add-habit .field:first-child { flex: 1; }
+
+input, select, button {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.6rem;
+}
+
+#habit-target { width: 4.5rem; }
+
+button[type="submit"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #07281c;
+  font-weight: 600;
+}
+
+:disabled { opacity: 0.5; }
+
+#habits { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+
+.habit {
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--card);
+}
+
+.habit h2 { font-size: 1rem; margin: 0; }
+.habit .cadence { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.85rem; }
